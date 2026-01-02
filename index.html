@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++代码风格格式化工具</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>C++代码风格格式化工具</h1>
+        </header>
+
+        <!-- 标签页导航 -->
+        <div class="tabs">
+            <div class="tab" data-tab="home" class="active">首页</div>
+            <div class="tab" data-tab="config">配置</div>
+        </div>
+
+        <!-- 标签页内容 -->
+        <div class="tab-content">
+            <!-- 首页内容 -->
+            <div id="home" class="tab-panel active">
+                <div class="main-layout">
+                    <!-- 左侧项目树 -->
+                    <section class="project-tree">
+                        <div class="tree-header">
+                            <h3>项目文件</h3>
+                            <div class="tree-controls">
+                                <button id="selectAllBtn">全选</button>
+                                <button id="deselectAllBtn">取消全选</button>
+                            </div>
+                        </div>
+                        <div id="treeContainer" class="tree-container">
+                            <p class="no-files">请先选择项目文件夹</p>
+                        </div>
+                    </section>
+
+                    <!-- 右侧内容 -->
+                    <div class="right-content">
+                        <div class="content-area">
+                            <section class="settings">
+                                <div class="setting-item">
+                                    <label for="folderPath">项目文件夹:</label>
+                                    <div class="folder-selector">
+                                        <input type="text" id="folderPath" readonly placeholder="请选择项目文件夹">
+                                        <button id="selectFolderBtn">浏览...</button>
+                                    </div>
+                                </div>
+
+                                <div class="setting-item">
+                                    <label>文件类型:</label>
+                                    <div class="file-types">
+                                        <label><input type="checkbox" class="file-type" value=".h" checked>.h</label>
+                                        <label><input type="checkbox" class="file-type" value=".hpp" checked>.hpp</label>
+                                        <label><input type="checkbox" class="file-type" value=".cc" checked>.cc</label>
+                                        <label><input type="checkbox" class="file-type" value=".cpp" checked>.cpp</label>
+                                    </div>
+                                </div>
+
+                                <div class="buttons">
+                                    <button id="startBtn">开始格式化</button>
+                                    <button id="exportLogBtn">导出日志</button>
+                                </div>
+                            </section>
+
+                            <section class="progress">
+                                <div class="progress-item">
+                                    <span>搜索进度:</span>
+                                    <div class="progress-bar">
+                                        <div id="searchProgressBar" class="progress-fill"></div>
+                                    </div>
+                                    <span id="searchStatus">未开始</span>
+                                </div>
+
+                                <div class="progress-item">
+                                    <span>格式化进度:</span>
+                                    <div class="progress-bar">
+                                        <div id="formatProgressBar" class="progress-fill"></div>
+                                    </div>
+                                    <span id="formatStatus">未开始</span>
+                                </div>
+
+                                <div class="file-info">
+                                    <p>已搜索到文件数: <span id="fileCount">0</span></p>
+                                    <p>已选择文件数: <span id="selectedCount">0</span></p>
+                                    <p>已格式化文件数: <span id="formattedCount">0</span></p>
+                                </div>
+                            </section>
+                        </div>
+
+                        <section class="log">
+                            <h2>格式化日志</h2>
+                            <div id="logContainer" class="log-container">
+                                <p class="log-item">欢迎使用C++代码风格格式化工具</p>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 配置页内容 -->
+            <div id="config" class="tab-panel">
+                <div class="config-content">
+                    <h2>clang-format配置</h2>
+                    <p>自定义Google代码风格的格式化规则</p>
+                    
+                    <div class="config-section">
+                        <h3>基础配置</h3>
+                        
+                        <div class="config-item">
+                            <label for="indentWidth">缩进宽度:</label>
+                            <input type="number" id="indentWidth" min="1" max="10" value="2">
+                        </div>
+                        
+                        <div class="config-item">
+                            <label for="tabWidth">制表符宽度:</label>
+                            <input type="number" id="tabWidth" min="1" max="10" value="2">
+                        </div>
+                        
+                        <div class="config-item">
+                            <label for="useTab">使用制表符缩进:</label>
+                            <select id="useTab">
+                                <option value="Never">Never</option>
+                                <option value="ForIndentation">ForIndentation</option>
+                                <option value="ForContinuationAndIndentation">ForContinuationAndIndentation</option>
+                                <option value="Always">Always</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="config-section">
+                        <h3>空格配置</h3>
+                        
+                        <div class="config-item">
+                            <label for="spacesInParentheses">括号内空格:</label>
+                            <input type="checkbox" id="spacesInParentheses">
+                        </div>
+                        
+                        <div class="config-item">
+                            <label for="spacesInSquareBrackets">方括号内空格:</label>
+                            <input type="checkbox" id="spacesInSquareBrackets">
+                        </div>
+                        
+                        <div class="config-item">
+                            <label for="spacesInAngles">尖括号内空格:</label>
+                            <input type="checkbox" id="spacesInAngles">
+                        </div>
+                        
+                        <div class="config-item">
+                            <label for="spaceBeforeParens">括号前空格:</label>
+                            <select id="spaceBeforeParens">
+                                <option value="Never">Never</option>
+                                <option value="ControlStatements">ControlStatements</option>
+                                <option value="Always">Always</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="config-section">
+                        <h3>换行配置</h3>
+                        
+                        <div class="config-item">
+                            <label for="columnLimit">行长度限制:</label>
+                            <input type="number" id="columnLimit" min="50" max="200" value="80">
+                        </div>
+                        
+                        <div class="config-item">
+                            <label for="breakBeforeBraces">大括号前换行:</label>
+                            <select id="breakBeforeBraces">
+                                <option value="Attach">Attach</option>
+                                <option value="Linux">Linux</option>
+                                <option value="Mozilla">Mozilla</option>
+                                <option value="Stroustrup">Stroustrup</option>
+                                <option value="Allman">Allman</option>
+                                <option value="GNU">GNU</option>
+                                <option value="WebKit">WebKit</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="config-buttons">
+                        <button id="saveConfigBtn">保存配置</button>
+                        <button id="loadDefaultBtn">加载默认配置</button>
+                        <button id="resetConfigBtn">重置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>
