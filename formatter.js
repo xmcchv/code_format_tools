@@ -1,6 +1,25 @@
 const fs = require('fs').promises;
+const fsSync = require('fs');
 const path = require('path');
 const { execSync, exec } = require('child_process');
+const app = require('electron').app || require('electron').remote?.app;
+
+// 获取项目根目录
+const getAppPath = () => {
+    if (app) {
+        return app.getAppPath();
+    }
+    return __dirname;
+};
+
+// 获取clang-format.exe的路径
+const getClangFormatPath = () => {
+    const appPath = getAppPath();
+    const clangFormatPath = path.join(appPath, 'bin', 'clang-format.exe');
+    console.log('clang-format.exe路径:', clangFormatPath);
+    console.log('文件是否存在:', fsSync.existsSync(clangFormatPath));
+    return clangFormatPath;
+};
 
 /**
  * 递归搜索指定目录中的文件
@@ -47,9 +66,14 @@ async function searchFiles(folderPath, fileTypes) {
  */
 function checkClangFormat() {
     try {
-        execSync('clang-format --version', { stdio: 'ignore' });
+        const clangFormatPath = getClangFormatPath();
+        // 检查文件是否存在
+        fsSync.accessSync(clangFormatPath);
+        // 尝试运行版本命令，确保可执行
+        execSync(`"${clangFormatPath}" --version`, { stdio: 'ignore' });
         return true;
     } catch (error) {
+        console.error('checkClangFormat错误:', error);
         return false;
     }
 }
@@ -63,6 +87,7 @@ function checkClangFormat() {
  */
 async function formatFile(filePath, timeout = 30000, config = null) {
     return new Promise((resolve) => {
+        const clangFormatPath = getClangFormatPath();
         let cmd;
         if (config) {
             // 转换配置选项，确保使用正确的clang-format选项名称
@@ -79,10 +104,10 @@ async function formatFile(filePath, timeout = 30000, config = null) {
             };
             // 使用转换后的配置，正确构造JSON格式的配置字符串
             const styleConfig = JSON.stringify(formattedConfig).replace(/"/g, '\\"');
-            cmd = `clang-format --style="${styleConfig}" -i "${filePath}"`;
+            cmd = `"${clangFormatPath}" --style="${styleConfig}" -i "${filePath}"`;
         } else {
             // 使用默认的Google风格
-            cmd = `clang-format --style=Google -i "${filePath}"`;
+            cmd = `"${clangFormatPath}" --style=Google -i "${filePath}"`;
         }
         
         const child = exec(cmd, (error) => {

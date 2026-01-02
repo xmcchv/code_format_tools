@@ -103,6 +103,20 @@ Google C++代码风格是一种广泛使用的C++代码格式化规范，以下�
 - Electron
 - clang-format
 
+## clang-format配置
+
+### 获取clang-format.exe
+
+从LLVM官网下载适合您系统的clang-format可执行文件：
+
+- [LLVM下载页面](https://llvm.org/releases/download.html)
+
+选择最新版本的LLVM，下载Windows版本的安装包或压缩包。安装或解压后，找到`clang-format.exe`文件。
+
+### 放入bin目录
+
+将`clang-format.exe`文件复制到项目根目录下的`bin`目录中。
+
 ## 安装
 
 ```bash
