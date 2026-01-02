@@ -1,0 +1,731 @@
+/* Fluent UI 基础样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f3f2f1;
+    color: #1a1a1a;
+    line-height: 1.5;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* Fluent UI 颜色变量 */
+:root {
+    --fluent-primary: #0078d4;
+    --fluent-primary-hover: #106ebe;
+    --fluent-primary-active: #005a9e;
+    --fluent-secondary: #6b6a67;
+    --fluent-background: #ffffff;
+    --fluent-surface: #f3f2f1;
+    --fluent-border: #eaeaea;
+    --fluent-text-primary: #1a1a1a;
+    --fluent-text-secondary: #6b6a67;
+    --fluent-text-tertiary: #8a8886;
+    --fluent-accent: #0078d4;
+    --fluent-success: #107c10;
+    --fluent-warning: #ffb900;
+    --fluent-error: #d13438;
+    --fluent-info: #0078d4;
+    --fluent-hover: #f3f2f1;
+    --fluent-selected: #c7e0f4;
+    --fluent-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --fluent-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.container {
+    width: 100%;
+    height: 100vh;
+    background-color: var(--fluent-surface);
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 0;
+    padding: 16px 20px;
+    background-color: var(--fluent-background);
+    border-bottom: 1px solid var(--fluent-border);
+    flex-shrink: 0;
+}
+
+header h1 {
+    color: var(--fluent-primary);
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+header p {
+    color: var(--fluent-text-secondary);
+    font-size: 14px;
+}
+
+main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* 标签页样式 - Fluent UI */
+.tabs {
+    display: flex;
+    background-color: var(--fluent-background);
+    border-bottom: 1px solid var(--fluent-border);
+    flex-shrink: 0;
+    padding-left: 12px;
+}
+
+.tab {
+    padding: 12px 20px;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--fluent-text-secondary);
+    transition: all 0.2s ease;
+    position: relative;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+}
+
+.tab:hover {
+    background-color: var(--fluent-hover);
+    color: var(--fluent-primary);
+}
+
+.tab.active {
+    color: var(--fluent-primary);
+    background-color: var(--fluent-background);
+    border-bottom: 2px solid var(--fluent-primary);
+}
+
+/* 标签页内容样式 */
+.tab-content {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+}
+
+.tab-panel {
+    display: none;
+    flex: 1;
+    overflow: hidden;
+}
+
+.tab-panel.active {
+    display: flex;
+}
+
+.main-layout {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* 配置页样式 */
+.config-content {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
+    background-color: var(--fluent-background);
+}
+
+.config-content h2 {
+    margin-bottom: 12px;
+    color: var(--fluent-text-primary);
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.config-content p {
+    margin-bottom: 24px;
+    color: var(--fluent-text-secondary);
+    font-size: 14px;
+}
+
+.config-section {
+    margin-bottom: 28px;
+    background-color: var(--fluent-background);
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: var(--fluent-shadow);
+    border: 1px solid var(--fluent-border);
+}
+
+.config-section h3 {
+    margin-bottom: 16px;
+    color: var(--fluent-text-primary);
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.config-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    gap: 16px;
+}
+
+.config-item label {
+    min-width: 180px;
+    font-weight: 500;
+    color: var(--fluent-text-primary);
+    font-size: 14px;
+}
+
+.config-item input[type="number"],
+.config-item select {
+    padding: 8px 12px;
+    border: 1px solid var(--fluent-border);
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: var(--fluent-background);
+    color: var(--fluent-text-primary);
+    transition: all 0.2s ease;
+}
+
+.config-item input[type="number"]:focus,
+.config-item select:focus {
+    outline: none;
+    border-color: var(--fluent-primary);
+    box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2);
+}
+
+.config-item input[type="number"] {
+    width: 120px;
+}
+
+.config-item select {
+    min-width: 220px;
+}
+
+.config-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--fluent-primary);
+}
+
+.config-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--fluent-border);
+}
+
+/* 按钮样式 - Fluent UI */
+button {
+    padding: 8px 16px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+button:hover {
+    box-shadow: var(--fluent-shadow);
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+/* 主要按钮 */
+button.primary {
+    background-color: var(--fluent-primary);
+    color: white;
+}
+
+button.primary:hover {
+    background-color: var(--fluent-primary-hover);
+}
+
+button.primary:active {
+    background-color: var(--fluent-primary-active);
+}
+
+/* 次要按钮 */
+button.secondary {
+    background-color: var(--fluent-background);
+    color: var(--fluent-text-primary);
+    border-color: var(--fluent-border);
+}
+
+button.secondary:hover {
+    background-color: var(--fluent-hover);
+}
+
+/* 成功按钮 */
+button.success {
+    background-color: var(--fluent-success);
+    color: white;
+}
+
+button.success:hover {
+    background-color: #0e630e;
+}
+
+/* 警告按钮 */
+button.warning {
+    background-color: var(--fluent-warning);
+    color: var(--fluent-text-primary);
+}
+
+button.warning:hover {
+    background-color: #e8aa00;
+}
+
+/* 错误按钮 */
+button.error {
+    background-color: var(--fluent-error);
+    color: white;
+}
+
+button.error:hover {
+    background-color: #b52b2b;
+}
+
+.config-buttons button {
+    padding: 10px 24px;
+}
+
+#saveConfigBtn {
+    background-color: var(--fluent-primary);
+    color: white;
+}
+
+#saveConfigBtn:hover {
+    background-color: var(--fluent-primary-hover);
+}
+
+#loadDefaultBtn {
+    background-color: var(--fluent-secondary);
+    color: white;
+}
+
+#loadDefaultBtn:hover {
+    background-color: #5a5957;
+}
+
+#resetConfigBtn {
+    background-color: var(--fluent-background);
+    color: var(--fluent-text-primary);
+    border: 1px solid var(--fluent-border);
+}
+
+#resetConfigBtn:hover {
+    background-color: var(--fluent-hover);
+}
+
+/* 左侧项目树 */
+.project-tree {
+    width: 300px;
+    background-color: var(--fluent-background);
+    border-right: 1px solid var(--fluent-border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: var(--fluent-shadow);
+}
+
+.tree-header {
+    padding: 16px;
+    border-bottom: 1px solid var(--fluent-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    background-color: var(--fluent-background);
+}
+
+.tree-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--fluent-text-primary);
+}
+
+.tree-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.tree-controls button {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.tree-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+    background-color: var(--fluent-background);
+}
+
+.no-files {
+    text-align: center;
+    color: var(--fluent-text-tertiary);
+    padding: 24px;
+    font-size: 14px;
+}
+
+/* 树节点样式 */
+.tree-node {
+    margin: 2px 0;
+    cursor: pointer;
+}
+
+.tree-node:hover {
+    background-color: var(--fluent-hover);
+}
+
+/* 选中状态样式 */
+.tree-node.selected .node-content {
+    background-color: var(--fluent-selected);
+    border-radius: 2px;
+    font-weight: 500;
+}
+
+.node-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    border-radius: 2px;
+    transition: all 0.2s ease;
+}
+
+.node-content:hover {
+    background-color: var(--fluent-hover);
+}
+
+.node-checkbox {
+    margin: 0;
+    cursor: pointer;
+    accent-color: var(--fluent-primary);
+}
+
+.node-icon {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    text-align: center;
+    line-height: 16px;
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--fluent-text-tertiary);
+}
+
+.folder-icon {
+    color: var(--fluent-warning);
+}
+
+.file-icon {
+    color: var(--fluent-primary);
+}
+
+.node-name {
+    flex: 1;
+    user-select: none;
+    font-size: 14px;
+}
+
+/* 子节点缩进 */
+.tree-children {
+    margin-left: 20px;
+    display: none;
+}
+
+.tree-children.expanded {
+    display: block;
+}
+
+/* 右侧内容 */
+.right-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow: hidden;
+    padding: 12px;
+}
+
+.content-area {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow: hidden;
+}
+
+.settings {
+    background-color: var(--fluent-background);
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: var(--fluent-shadow);
+    border: 1px solid var(--fluent-border);
+    flex-shrink: 0;
+}
+
+.setting-item {
+    margin-bottom: 16px;
+}
+
+.setting-item label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--fluent-text-primary);
+    font-size: 14px;
+}
+
+.folder-selector {
+    display: flex;
+    gap: 8px;
+}
+
+.folder-selector input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid var(--fluent-border);
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: var(--fluent-background);
+    color: var(--fluent-text-primary);
+    transition: all 0.2s ease;
+}
+
+.folder-selector input:focus {
+    outline: none;
+    border-color: var(--fluent-primary);
+    box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2);
+}
+
+.file-types {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.file-types label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: normal;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--fluent-text-primary);
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--fluent-border);
+    transition: all 0.2s ease;
+}
+
+.file-types label:hover {
+    background-color: var(--fluent-hover);
+    border-color: var(--fluent-primary);
+}
+
+.file-types input[type="checkbox"] {
+    accent-color: var(--fluent-primary);
+}
+
+.buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#selectFolderBtn {
+    background-color: var(--fluent-primary);
+    color: white;
+    min-width: 90px;
+}
+
+#selectFolderBtn:hover {
+    background-color: var(--fluent-primary-hover);
+}
+
+#startBtn {
+    background-color: var(--fluent-success);
+    color: white;
+    flex: 1;
+}
+
+#startBtn:hover {
+    background-color: #0e630e;
+}
+
+#startBtn:disabled {
+    background-color: #d0d0d0;
+    color: var(--fluent-text-tertiary);
+    cursor: not-allowed;
+}
+
+#exportLogBtn {
+    background-color: var(--fluent-secondary);
+    color: white;
+}
+
+#exportLogBtn:hover {
+    background-color: #5a5957;
+}
+
+/* 进度条样式 - Fluent UI */
+.progress {
+    background-color: var(--fluent-background);
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: var(--fluent-shadow);
+    border: 1px solid var(--fluent-border);
+    flex-shrink: 0;
+}
+
+.progress-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.progress-item:last-child {
+    margin-bottom: 0;
+}
+
+.progress-item span {
+    min-width: 100px;
+    font-weight: 500;
+    color: var(--fluent-text-primary);
+    font-size: 14px;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 8px;
+    background-color: var(--fluent-border);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: var(--fluent-primary);
+    width: 0%;
+    transition: width 0.3s ease;
+    border-radius: 4px;
+}
+
+.file-info {
+    display: flex;
+    gap: 24px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--fluent-border);
+}
+
+.file-info p {
+    font-weight: 500;
+    color: var(--fluent-text-primary);
+    font-size: 14px;
+}
+
+.file-info span {
+    color: var(--fluent-primary);
+}
+
+/* 日志样式 */
+.log {
+    background-color: var(--fluent-background);
+    border-radius: 4px;
+    box-shadow: var(--fluent-shadow);
+    border: 1px solid var(--fluent-border);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.log h2 {
+    padding: 16px 20px 12px;
+    margin: 0;
+    color: var(--fluent-text-primary);
+    font-size: 16px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--fluent-border);
+}
+
+.log-container {
+    flex: 1;
+    overflow-y: auto;
+    background-color: var(--fluent-background);
+    padding: 16px;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--fluent-text-primary);
+}
+
+.log-item {
+    margin-bottom: 8px;
+    padding: 4px 8px;
+    border-radius: 2px;
+    background-color: var(--fluent-surface);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .container {
+        padding: 0;
+    }
+
+    .main-layout {
+        flex-direction: column;
+    }
+
+    .project-tree {
+        width: 100%;
+        height: 200px;
+    }
+
+    .folder-selector {
+        flex-direction: column;
+    }
+
+    .buttons {
+        flex-direction: column;
+    }
+
+    .progress-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .progress-item span {
+        min-width: auto;
+    }
+
+    .file-info {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
