@@ -102,8 +102,20 @@ async function formatFile(filePath, timeout = 30000, config = null) {
                 ColumnLimit: config.columnLimit || config.ColumnLimit || 80,
                 BreakBeforeBraces: config.breakBeforeBraces || config.BreakBeforeBraces || 'Attach'
             };
-            // 使用转换后的配置，正确构造JSON格式的配置字符串
-            const styleConfig = JSON.stringify(formattedConfig).replace(/"/g, '\\"');
+            
+            let styleConfig;
+            if (config.baseFormat || config.BaseFormat) {
+                // 使用base格式进行格式化
+                const baseFormat = config.baseFormat || config.BaseFormat;
+                styleConfig = JSON.stringify({
+                    BasedOnStyle: baseFormat,
+                    ...formattedConfig
+                }).replace(/"/g, '\\"');
+            } else {
+                // 不使用base格式，直接使用自定义配置
+                styleConfig = JSON.stringify(formattedConfig).replace(/"/g, '\\"');
+            }
+            
             cmd = `"${clangFormatPath}" --style="${styleConfig}" -i "${filePath}"`;
         } else {
             // 使用默认的Google风格

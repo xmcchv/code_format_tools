@@ -105,7 +105,24 @@
             <div id="config" class="tab-panel">
                 <div class="config-content">
                     <h2>clang-format配置</h2>
-                    <p>自定义Google代码风格的格式化规则</p>
+                    <p>自定义代码风格的格式化规则</p>
+                    
+                    <div class="config-section">
+                        <h3>base格式选择</h3>
+                        
+                        <div class="config-item">
+                            <label for="baseFormat">选择base格式:</label>
+                            <select id="baseFormat">
+                                <option value="Google">Google</option>
+                                <option value="LLVM">LLVM</option>
+                                <option value="Mozilla">Mozilla</option>
+                                <option value="WebKit">WebKit</option>
+                                <option value="Stroustrup">Stroustrup</option>
+                                <option value="Allman">Allman</option>
+                                <option value="GNU">GNU</option>
+                            </select>
+                        </div>
+                    </div>
                     
                     <div class="config-section">
                         <h3>基础配置</h3>

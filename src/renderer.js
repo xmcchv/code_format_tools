@@ -28,6 +28,7 @@ const tabPanels = document.querySelectorAll('.tab-panel');
 const saveConfigBtn = document.getElementById('saveConfigBtn');
 const loadDefaultBtn = document.getElementById('loadDefaultBtn');
 const resetConfigBtn = document.getElementById('resetConfigBtn');
+const baseFormatSelect = document.getElementById('baseFormat');
 const indentWidthInput = document.getElementById('indentWidth');
 const tabWidthInput = document.getElementById('tabWidth');
 const useTabSelect = document.getElementById('useTab');
@@ -45,15 +46,16 @@ let fileTree = {}; // 文件树结构
 let currentFolder = ''; // 当前选择的文件夹
 let config = {}; // 配置信息
 
-// Google代码风格的默认配置
+// 默认配置
 const defaultGoogleConfig = {
+    baseFormat: 'Google',
     indentWidth: 2,
     tabWidth: 2,
     useTab: 'Never',
     spacesInParentheses: false,
     spacesInSquareBrackets: false,
     spacesInAngles: false,
-    SpaceBeforeParens: 'Never',
+    SpaceBeforeParens: 'ControlStatements',
     columnLimit: 80,
     breakBeforeBraces: 'Attach'
 };
@@ -94,13 +96,14 @@ function initConfig() {
 function saveConfig() {
     // 获取当前配置
     config = {
+        baseFormat: baseFormatSelect.value,
         indentWidth: parseInt(indentWidthInput.value),
         tabWidth: parseInt(tabWidthInput.value),
         useTab: useTabSelect.value,
         spacesInParentheses: spacesInParenthesesInput.checked,
         spacesInSquareBrackets: spacesInSquareBracketsInput.checked,
         spacesInAngles: spacesInAnglesInput.checked,
-        SpaceBeforeParens: spaceBeforeParensSelect.value,
+        spaceBeforeParens: spaceBeforeParensSelect.value,
         columnLimit: parseInt(columnLimitInput.value),
         breakBeforeBraces: breakBeforeBracesSelect.value
     };
@@ -145,13 +148,14 @@ function resetConfig() {
 
 // 更新配置UI
 function updateConfigUI(config) {
+    baseFormatSelect.value = config.baseFormat || 'Google';
     indentWidthInput.value = config.indentWidth;
     tabWidthInput.value = config.tabWidth;
     useTabSelect.value = config.useTab;
     spacesInParenthesesInput.checked = config.spacesInParentheses;
     spacesInSquareBracketsInput.checked = config.spacesInSquareBrackets;
     spacesInAnglesInput.checked = config.spacesInAngles;
-    spaceBeforeParensSelect.value = config.SpaceBeforeParens;
+    spaceBeforeParensSelect.value = config.spaceBeforeParens || config.SpaceBeforeParens;
     columnLimitInput.value = config.columnLimit;
     breakBeforeBracesSelect.value = config.breakBeforeBraces;
 }
@@ -165,6 +169,14 @@ selectFolderBtn.addEventListener('click', () => {
 // 初始化标签页和配置
 initTabs();
 initConfig();
+
+// 当base格式选择变化时，加载对应格式的默认配置
+baseFormatSelect.addEventListener('change', () => {
+    // 发送请求获取对应base格式的默认配置
+    ipcRenderer.send('load-base-format', {
+        baseFormat: baseFormatSelect.value
+    });
+});
 
 // 监听文件夹选择结果
 ipcRenderer.on('select-folder-result', (event, result) => {
