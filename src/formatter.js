@@ -9,16 +9,25 @@ const getAppPath = () => {
     if (app) {
         return app.getAppPath();
     }
-    return __dirname;
+    // 当前文件在src目录下，所以需要返回上一级目录作为项目根目录
+    return path.join(__dirname, '..');
 };
 
-// 获取clang-format.exe的路径
+// 根据平台获取clang-format工具
 const getClangFormatPath = () => {
-    const appPath = getAppPath();
-    const clangFormatPath = path.join(appPath, 'bin', 'clang-format.exe');
-    console.log('clang-format.exe路径:', clangFormatPath);
-    console.log('文件是否存在:', fsSync.existsSync(clangFormatPath));
-    return clangFormatPath;
+    // 对于Windows平台，使用项目bin目录中的clang-format.exe
+    // 对于Linux和macOS平台，使用系统环境中的clang-format
+    if (process.platform === 'win32') {
+        const appPath = getAppPath();
+        const clangFormatPath = path.join(appPath, 'bin', 'clang-format.exe');
+        console.log('Windows平台，使用项目bin目录中的clang-format.exe:', clangFormatPath);
+        console.log('文件是否存在:', fsSync.existsSync(clangFormatPath));
+        return clangFormatPath;
+    } else {
+        // Linux和macOS平台，使用系统环境中的clang-format
+        console.log('Linux/macOS平台，使用系统环境中的clang-format');
+        return 'clang-format';
+    }
 };
 
 /**
@@ -67,10 +76,19 @@ async function searchFiles(folderPath, fileTypes) {
 function checkClangFormat() {
     try {
         const clangFormatPath = getClangFormatPath();
-        // 检查文件是否存在
-        fsSync.accessSync(clangFormatPath);
-        // 尝试运行版本命令，确保可执行
-        execSync(`"${clangFormatPath}" --version`, { stdio: 'ignore' });
+        
+        // 根据平台使用不同的检查逻辑
+        if (process.platform === 'win32') {
+            // 对于Windows平台，先检查文件是否存在
+            fsSync.accessSync(clangFormatPath);
+            // 然后尝试运行版本命令，确保可执行
+            execSync(`"${clangFormatPath}" --version`, { stdio: 'ignore' });
+        } else {
+            // 对于Linux和macOS平台，直接尝试运行版本命令
+            // 不需要检查文件是否存在，因为系统会在PATH中查找
+            execSync(`${clangFormatPath} --version`, { stdio: 'ignore' });
+        }
+        
         return true;
     } catch (error) {
         console.error('checkClangFormat错误:', error);
@@ -90,18 +108,54 @@ async function formatFile(filePath, timeout = 30000, config = null) {
         const clangFormatPath = getClangFormatPath();
         let cmd;
         if (config) {
-            // 转换配置选项，确保使用正确的clang-format选项名称
-            const formattedConfig = {
-                IndentWidth: config.indentWidth || config.IndentWidth || 2,
-                TabWidth: config.tabWidth || config.TabWidth || 2,
-                UseTab: config.useTab || config.UseTab || 'Never',
-                SpacesInParens: config.spacesInParentheses || config.SpacesInParentheses || config.spacesInParens || config.SpacesInParens || 'Never',
-                SpacesInSquareBrackets: config.spacesInSquareBrackets || config.SpacesInSquareBrackets || false,
-                SpacesInAngles: config.spacesInAngles || config.SpacesInAngles || 'Never',
-                SpaceBeforeParens: config.spaceBeforeParens || config.SpaceBeforeParens || 'ControlStatements',
-                ColumnLimit: config.columnLimit || config.ColumnLimit || 80,
-                BreakBeforeBraces: config.breakBeforeBraces || config.BreakBeforeBraces || 'Attach'
-            };
+            // 转换配置选项，确保使用正确的clang-format选项名称和类型
+            // 注意：不同版本的clang-format可能有不同的配置选项名称和类型要求
+            // Windows平台的clang-format可能对类型要求宽松，而Linux/macOS平台的clang-format对类型要求严格
+            
+            // 获取各种配置值
+            const indentWidth = config.indentWidth || config.IndentWidth || 2;
+            const tabWidth = config.tabWidth || config.TabWidth || 2;
+            const useTab = config.useTab || config.UseTab || 'Never';
+            const spacesInSquareBracketsValue = config.spacesInSquareBrackets || config.SpacesInSquareBrackets || false;
+            const spacesInAnglesValue = config.spacesInAngles || config.SpacesInAngles || 'Never';
+            const spaceBeforeParensValue = config.spaceBeforeParens || config.SpaceBeforeParens || 'ControlStatements';
+            const columnLimit = config.columnLimit || config.ColumnLimit || 80;
+            const breakBeforeBracesValue = config.breakBeforeBraces || config.BreakBeforeBraces || 'Attach';
+            const spacesInParensValue = config.spacesInParentheses || config.SpacesInParentheses || config.spacesInParens || config.SpacesInParens || 'Never';
+            
+            // 根据平台构建不同的配置
+            let formattedConfig;
+            if (process.platform === 'win32') {
+                // Windows平台配置
+                formattedConfig = {
+                    IndentWidth: indentWidth,
+                    TabWidth: tabWidth,
+                    UseTab: useTab,
+                    SpacesInParens: spacesInParensValue,
+                    SpacesInSquareBrackets: spacesInSquareBracketsValue,
+                    SpacesInAngles: spacesInAnglesValue,
+                    SpaceBeforeParens: spaceBeforeParensValue,
+                    ColumnLimit: columnLimit,
+                    BreakBeforeBraces: breakBeforeBracesValue
+                };
+            } else {
+                // Linux和macOS平台配置，确保类型正确
+                formattedConfig = {
+                    IndentWidth: indentWidth,
+                    TabWidth: tabWidth,
+                    UseTab: useTab,
+                    // SpacesInParentheses是布尔值
+                    SpacesInParentheses: spacesInParensValue === 'Always' || spacesInParensValue === true,
+                    // SpacesInSquareBrackets是布尔值
+                    SpacesInSquareBrackets: typeof spacesInSquareBracketsValue === 'boolean' ? spacesInSquareBracketsValue : spacesInSquareBracketsValue === 'true',
+                    // SpacesInAngles在Linux/macOS平台可能是布尔值
+                    SpacesInAngles: spacesInAnglesValue === 'Always' || spacesInAnglesValue === true,
+                    // SpaceBeforeParens是字符串
+                    SpaceBeforeParens: spaceBeforeParensValue,
+                    ColumnLimit: columnLimit,
+                    BreakBeforeBraces: breakBeforeBracesValue
+                };
+            }
             
             let styleConfig;
             if (config.baseFormat || config.BaseFormat) {
@@ -116,10 +170,24 @@ async function formatFile(filePath, timeout = 30000, config = null) {
                 styleConfig = JSON.stringify(formattedConfig).replace(/"/g, '\\"');
             }
             
-            cmd = `"${clangFormatPath}" --style="${styleConfig}" -i "${filePath}"`;
+            // 根据平台使用不同的命令格式
+            if (process.platform === 'win32') {
+                // Windows平台，使用引号包围路径
+                cmd = `"${clangFormatPath}" --style="${styleConfig}" -i "${filePath}"`;
+            } else {
+                // Linux和macOS平台，不需要引号包围路径
+                cmd = `${clangFormatPath} --style="${styleConfig}" -i "${filePath}"`;
+            }
         } else {
             // 使用默认的Google风格
-            cmd = `"${clangFormatPath}" --style=Google -i "${filePath}"`;
+            // 根据平台使用不同的命令格式
+            if (process.platform === 'win32') {
+                // Windows平台，使用引号包围路径
+                cmd = `"${clangFormatPath}" --style=Google -i "${filePath}"`;
+            } else {
+                // Linux和macOS平台，不需要引号包围路径
+                cmd = `${clangFormatPath} --style=Google -i "${filePath}"`;
+            }
         }
         
         const child = exec(cmd, (error) => {
@@ -201,5 +269,6 @@ async function formatFiles(files, progressCallback, config = null) {
 module.exports = {
     searchFiles,
     formatFiles,
-    checkClangFormat
+    checkClangFormat,
+    formatFile
 };
